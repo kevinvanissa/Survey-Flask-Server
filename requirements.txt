@@ -1,0 +1,14 @@
+Click
+Flask
+Flask-Login
+Flask-MySQLdb
+Flask-SQLAlchemy
+Flask-WTF
+itsdangerous
+Jinja2
+MarkupSafe
+mysqlclient
+SQLAlchemy
+Werkzeug
+WTForms
+jwt
