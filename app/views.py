@@ -41,10 +41,11 @@ def register():
     user = User(firstname=data['firstname'],lastname=data['lastname'],email=data['email'],password=hashed_password,admin=False)
     db.session.add(user)
     db.session.commit()
+    # response.headers.add('Access-Control-Allow-Origin', '*')
     return jsonify({'Message':'The user was created.'}) 
 
 
-@app.route('/user',methods=['GET'])
+@app.route('/users',methods=['GET'])
 @token_required
 # def get_users():
 def get_users(current_user):
@@ -66,6 +67,22 @@ def get_users(current_user):
         user_data["admin"] = user.admin
         output.append(user_data)
     return jsonify({'users':output}) 
+
+
+
+@app.route('/user')
+@token_required
+def user(current_user):
+    user_data = {}
+    user_data["id"] = current_user.id
+    user_data["firstname"] = current_user.firstname
+    user_data["lastname"] = current_user.lastname
+    user_data["email"] = current_user.email
+    user_data["admin"] = current_user.admin
+
+    return jsonify(user_data)
+
+
 
 
 @app.route('/user/<user_id>',methods=['GET'])
@@ -114,9 +131,10 @@ def delete_user(current_user,user_id):
     return jsonify({'Message':'The user %s was deleted!' % user.email})
 
 
-@app.route('/authlogin')
-def authlogin():
+@app.route('/authlogin1')
+def authlogin1():
     auth = request.authorization
+    print(auth)
     if not auth or not auth.username or not auth.password:
         return make_response('User verification failed', 401, {'WWW-Authenticate':'Basic realm="Login Required!"'}) 
     
@@ -130,3 +148,79 @@ def authlogin():
         return jsonify({'token': token.decode('UTF-8')})
 
     return make_response('User verification failed', 401, {'WWW-Authenticate':'Basic realm="Login Required!"'}) 
+
+
+
+def encodeAuthToken(email, groups=[]):
+    try:
+        admin = True if 'admin' in groups else False
+
+        payload = {
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30),
+            'email': email,
+            'admin': admin
+        }
+        token = jwt.encode(payload, app.config['SECRET_KEY'])
+        return token
+    except Exception as e:
+        print(e)
+        return e
+
+
+
+@app.route('/authlogin', methods=['POST'])
+def loginAndGenerateToken():
+    # valid_user_1 = {'username': "test_user_1", 'password': 'Happy123'}
+    # valid_user_2 = {'username': 'test_admin', 'password': 'LessHappy123'}
+
+    req_json = request.get_json()
+    print(req_json)
+    email = req_json['email']
+    print(email)
+    password = req_json['password']
+    print(password)
+
+    try:
+        user = User.query.filter_by(email=email).first()
+
+        if check_password_hash(user.password,password):
+            if user.admin:
+                token = encodeAuthToken(email, ['admin'])
+            else:
+                token = encodeAuthToken(email)
+
+        user_data = {}
+        user_data["id"] = user.id
+        user_data["firstname"] = user.firstname
+        user_data["lastname"] = user.lastname
+        user_data["email"] = user.email
+        user_data["admin"] = user.admin
+
+
+
+        # if username == valid_user_1['username'] and password == valid_user_1['password']:
+            # token = encodeAuthToken(1)
+
+        # if username == valid_user_2['username'] and password == valid_user_2['password']:
+
+            # token = encodeAuthToken(2, ['admin'])
+
+        print(token)
+        return jsonify({
+            'status': 'success',
+            'user': user_data,
+            'auth_token': token.decode('UTF-8')
+        })
+    except Exception as e:
+        return jsonify({
+            'status': 'Failure',
+            'error': str(e)
+        })
+
+
+
+
+
+
+
+
