@@ -1,0 +1,22 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+{% block content %}
+{% include 'flash.html' %}
+<div class="row">
+        <div class="col-md-8 col-md-offset-4">
+            <h3>Upload CSV </h3> 
+
+{% from "_formhelpers.html" import render_field %}
+<form class="form" method="post" action="{{url_for('uploadXL')}}" enctype="multipart/form-data" role="form" >
+                    {{form.hidden_tag()}}
+  <dl>
+    {{ render_field(form.filexl) }}
+  </dl>
+  <p><input type="submit" value="Upload"> </p>
+</form>
+
+
+      </div>
+    </div>
+
+{% endblock %}

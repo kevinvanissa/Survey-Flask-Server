@@ -1,0 +1,189 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+{% include 'flash.html' %}
+
+  
+
+<h3 align="center"> Statistics </h3>
+<h5 align="center"> {{sSurvey.name}} </h3>
+<br />
+<div class="row">
+    <div class="col-md-10 offset-md-2">
+
+
+
+        <h5>Community Readiness Score: {{total_readiness}} % </h5>
+        <h5>Number of Respondents: {{nResponses}}  </h5>
+        <br />
+        <br />
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+  </li>
+  <li class="nav-item" role="presentation">
+    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Score Per Dimension</a>
+  </li>
+  <li class="nav-item" role="presentation">
+    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Map of Surveys</a>
+  </li>
+</ul>
+
+
+
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+  
+        <h5>Pie charts showing the percentage responses for each question </h5>
+        <br />
+
+        {% if allQuestions %}
+        <ol>
+        {% for q in allQuestions  %}
+            <li> 
+                {{q.Question.question_title }} <br /> <br />
+                <b>Readiness for question: {{ readiness_question[q.Question.id]}} % </b> <br />
+
+
+
+
+
+    <script>
+        $(function () {
+            var ctx{{q.Question.id}} = document.getElementById("layanan{{q.Question.id}}").getContext('2d');
+
+            {%if q.Question.question_type == 3%}
+            var data = {
+                datasets: [{
+                            data: [{{sDict[q.Question.id]["SA"]}}, {{sDict[q.Question.id]["A"]}}, {{sDict[q.Question.id]["U"]}}, {{sDict[q.Question.id]["D"]}}, {{sDict[q.Question.id]["SD"]}}],
+                    backgroundColor: [
+                        '#3c8dbc',
+                        '#f56954',
+                        '#f39c12',
+                        '#808000',
+                    ],
+                }],
+                labels: [
+                    'Strongly Agree',
+                    'Agree',
+                    'Unsure',
+                    'Disagree',
+                    'Strongly Disagree'
+                ]
+            };
+
+
+
+               var myDoughnutChart = new Chart(ctx{{q.Question.id}}, {
+                type: 'doughnut',
+                data: data,
+                options: {
+                    responsive: false,
+                    maintainAspectRatio: false,
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            boxWidth: 12
+                        }
+                    }
+                }
+            });
+
+            {% endif %}
+
+
+
+
+
+{%if q.Question.question_type == 2 %}
+            var data = {
+                datasets: [{
+                            data: [{{yDict[q.Question.id]["Y"]}}, {{yDict[q.Question.id]["U"]}}, {{yDict[q.Question.id]["N"]}}],
+                    backgroundColor: [
+                        '#3c8dbc',
+                        '#f56954',
+                        '#f39c12',
+                    ],
+                }],
+                labels: [
+                    'Yes',
+                    'Unsure',
+                    'No'
+                ]
+            };
+
+
+
+               var myDoughnutChart = new Chart(ctx{{q.Question.id}}, {
+                type: 'doughnut',
+                data: data,
+                options: {
+                    responsive: false,
+                    maintainAspectRatio: false,
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            boxWidth: 12
+                        }
+                    }
+                }
+            });
+
+            {% endif %}
+
+
+
+
+
+
+
+
+                    });
+    </script>
+
+
+  <div>
+      <canvas id="layanan{{q.Question.id}}" width="240px" height="240px"></canvas>
+  </div>
+
+
+            </li> <br />
+
+        {% endfor %}
+        </ol>
+        {% endif %}
+</div> <!-- End first tab-pane -->
+
+  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+      <br />
+      <h3> Readiness for Community for each Dimension</h3>
+     {% for d in dimensions %}
+     {{ d.name }}: <b>{{finalDimensionsMaxDict[d.id]}} % </b> <br />
+     {% endfor %}
+
+  </div> <!--end of second tab-pane -->
+
+
+
+  <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+
+<!--{{googlemap("my_awesome_map", lat=17.99702, lng=-76.79358, markers=[(0.12, -0.45345)])}}-->
+
+        <h2> Completed Survey Locations</h2>
+        <br />
+        {{sndmap.html}}
+
+
+
+  </div>
+
+
+</div> <!--End Tab content / myTabContent -->
+
+
+
+
+    </div>
+</div> <!-- END row-->
+{% endblock %}

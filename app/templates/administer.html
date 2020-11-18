@@ -1,0 +1,82 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+{% include 'flash.html' %}
+
+
+<h3 align="center"> Administer Survey </h3>
+<div class="row">
+    <div class="col-md-10 offset-md-2">
+    <br />
+        {% if surveyq %}
+        <h5>{{survey.name}}</h5>
+        <form action="{{url_for('savesurvey')}}"  class="form" method="post"> 
+            <input type="hidden" name="surveyid" id="surveyid" value="{{survey.id}}">
+        <ol>
+            {% for question in surveyq %}
+                <li>{{question.Question.question_title}}</li><br />
+
+                {% if question.Question.question_type == 3  %}
+                <p>
+                <input type ="radio" name="{{question.Question.id}}" id ="SA" value="20" required>
+                      <label for="SA">Strongly Agree</label><br>
+                      <input type ="radio" name="{{question.Question.id}}" id ="A" value="5">
+                      <label for="A">Agree</label><br>
+                      <input type ="radio" name="{{question.Question.id}}" id ="U" value="0">
+                      <label for="U">Unsure</label><br>
+                      <input type ="radio" name="{{question.Question.id}}" id ="D" value="-5">
+                      <label for="D">Disagree</label><br>
+                     <input type ="radio" name="{{question.Question.id}}" id ="SD" value="-20">
+                      <label for="SD">Strongly Disagree</label><br>
+                      </p>
+
+                {% elif question.Question.question_type == 2 %}
+                <p>
+                <input type ="radio" name="{{question.Question.id}}" id="Y" value="15" required>
+                      <label for="Y">YES</label><br>
+                    <input type ="radio" name="{{question.Question.id}}" id="U" value="0">
+                    <label for="U">Unsure</label><br>
+                      <input type ="radio" name="{{question.Question.id}}" id="N" value="-15">
+                      <label for="N">NO</label><br>
+                    </p>
+
+                {% elif question.Question.question_type == 4 %}
+                <p>
+                <input type ="radio" name="{{question.Question.id}}" id="M" value="1" required>
+                      <label for="M">MALE</label><br>
+                      <input type = "radio" name="{{question.Question.id}}" id="F" value="2">
+                      <label for="F">FEMALE</label><br>
+                    </p>
+                
+                {% elif question.Question.question_type == 1 %}
+                <p>
+                <input type ="radio" name="{{question.Question.id}}" id="1" value="1" required>
+                      <label for="1">18 - 32</label><br>
+                      <input type = "radio" name="{{question.Question.id}}" id="2" value="2">
+                      <label for="2">33 - 48</label><br>
+                      <input type = "radio" name="{{question.Question.id}}" id="3" value="3">
+                      <label for="3">49 - 100</label><br>
+                  </p>
+                  {% else %}
+                    <h5><i>unsure about this question</i></h5>
+                {% endif %}
+            {% endfor %}
+             </ol>
+
+             Latitude: <input type="text" name="lat" id="lat" value="0.000000">
+             Longitude: <input type="text" name="lon" id="lon" value="0.000000">
+             <br />
+             <br />
+
+             <input type="submit" class="btn btn-success" value="Submit Survey" /> 
+             </form>
+             <br />
+             <br />
+        {% else %}
+        <h5> You need to add questions to this survey </h5>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

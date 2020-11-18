@@ -1,0 +1,79 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+{% include 'flash.html' %}
+
+
+<h3 align="center"> All Questions </h3>
+<div class="row">
+    <div class="col-md-10 offset-md-2">
+    <br />
+<a href="" class="btn btn-sm btn-success" data-toggle="modal" data-target="#questionModal"><i class="fas fa-plus"></i> Add Question </a>
+<br />
+<br />
+<i>Question Type key (3 = Strongly Agree to Disagree, 2 = YES or NO ) </i>
+        {% if questions %}
+      <table class="table">
+        <thead class="table-secondary">
+            <tr>
+            <th scope="col">Question Title</th>
+            <th scope="col">Question Type</th>
+            <th scope="col">Updated</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for question in questions %}
+                <tr>
+                    <td><a href="{{url_for('editquestion',id=question.id)}}">{{question.question_title}}</a></td>
+                    <td>{{question.question_type}}</td>
+                    <td>{{question.updated}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+
+        {% else %}
+        <h5> You have not created any questions as yet! </h5>
+        {% endif %}
+
+    </div>
+</div>
+
+
+{% from "_formhelpers.html" import render_field %}
+
+<!-- Modal -->
+<div class="modal fade" id="questionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Question</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <form class="form" method="post" action="{{url_for('addquestion')}}" role="form">
+      <div class="modal-body">
+
+        <div class="well col-md-4">
+                            {{form.hidden_tag()}}
+        <dl>
+            {{render_field(form.question_title) }}
+            {{render_field(form.dimension, style="width:300px;") }}
+            {{render_field(form.question_type) }}
+        </dl>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save" ></i> Save changes</button>
+      </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

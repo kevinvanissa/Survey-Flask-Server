@@ -1,0 +1,45 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+{% include 'flash.html' %}
+
+</script>
+<h3 align="center"> Edit User {{user.firstname }} {{user.lastname}}</h3>
+<div class="row">
+    <div class="col-md-6 offset-md-2">
+        <a href="{{url_for('manageusers')}}"><< Back to Users</a>
+    <br />
+<br />
+<br />
+
+
+
+{% from "_formhelpers.html" import render_field %}
+<div class="alert alert-success" role="alert">
+<form id="editUserForm "class="form" method="post" action="{{url_for('edituser',id=user.id)}}" role="form">
+
+                            {{form.hidden_tag()}}
+        <dl>
+
+            {{render_field(form.firstname) }}
+            {{render_field(form.lastname) }}
+            {{render_field(form.user_role) }}
+            {{render_field(form.group_id) }}
+            {{render_field(form.active_user) }}
+
+        </dl>
+        <br />
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save User</button>
+
+        </form>
+</div>
+
+        <a href="" style="color:red;"> [X]</a> Delete this User
+
+    </div>
+</div>
+
+      
+
+{% endblock %}

@@ -1,0 +1,40 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+{% include 'flash.html' %}
+
+{% from "_formhelpers.html" import render_field %}
+
+<h3 align="center"> Edit Question </h3>
+<div class="row">
+    <div class="col-md-10 offset-md-2">
+        <a href="{{url_for('questions')}}"><< Back to Questions</a>
+    <br />
+<br />
+<br />
+
+<div class="alert alert-success" role="alert">
+<form class="form" method="post" action="{{url_for('editquestion',id=id)}}" role="form">
+      <div class="">
+
+        <div class="well col-md-4">
+                            {{form.hidden_tag()}}
+        <dl>
+            {{render_field(form.question_title) }}
+            {{render_field(form.dimension, style="width:300px;") }}
+            {{render_field(form.question_type) }}
+        </dl>
+        </div>
+
+      </div>
+      <br />
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save" ></i> Save changes</button>
+        </form>
+    </div>
+<a href="" style="color:red;"> [X]</a> Delete this Question 
+    </div>
+</div>
+
+
+{% endblock %}

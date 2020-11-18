@@ -1,0 +1,93 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+{% include 'flash.html' %}
+
+<script>
+    $( function() {
+    $( ".datepicker" ).datepicker(
+            {dateFormat: 'yy-mm-dd',
+
+            });
+    });
+</script>
+<h3 align="center"> Your Surveys </h3>
+<div class="row">
+    <div class="col-md-10 offset-md-2">
+    <br />
+<a href="" class="btn btn-sm btn-success" data-toggle="modal" data-target="#surveyModal"><i class="fas fa-plus"></i> Add Survey </a>
+<br />
+<br />
+        {% if surveys %}
+      <table class="table">
+        <thead class="table-secondary">
+            <tr>
+            <th scope="col">Survey Name</th>
+            <th scope="col">Survey Description</th>
+            <th scope="col">Group Assigned</th>
+            <th scope="col">Statistics</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for survey in surveys %}
+                <tr>
+                    <td><a href="{{url_for('preview',id=survey.Survey.id)}}">{{survey.Survey.name}}</a></td>
+                    <td>{{survey.Survey.description}}</td>
+                    <td>{{survey.Group.name}}</td>
+                    <td><a href="{{url_for('statistics',id=survey.Survey.id)}}"> <i class="fas fa-chart-line"></i></a> </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+
+        {% else %}
+        <h5> You have no surveys created as yet! </h5>
+        {% endif %}
+
+    </div>
+</div>
+
+{% from "_formhelpers.html" import render_field %}
+
+<!-- Modal -->
+<div class="modal fade" id="surveyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Survey</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <form id="myForm "class="form" method="post" action="{{url_for('addsurvey')}}" role="form">
+      <div class="modal-body">
+
+        <div class="well col-md-4">
+                            {{form.hidden_tag()}}
+        <dl>
+            {{render_field(form.name) }}
+            {{render_field(form.description) }}
+            {{render_field(form.start_date, class="datepicker") }}
+            {{render_field(form.end_date, class="datepicker") }}
+            {{render_field(form.group_id) }}
+        </dl>
+        </div>
+                
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save changes</button>
+      </div>
+
+        </form>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+{% endblock %}

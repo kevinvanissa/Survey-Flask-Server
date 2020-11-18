@@ -1,0 +1,39 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+{% include 'flash.html' %}
+
+
+<h3 align="center"> Your Surveys </h3>
+<div class="row">
+    <div class="col-md-10 offset-md-2">
+    <br />
+<br />
+        {% if surveys %}
+      <table class="table">
+        <thead class="table-secondary">
+            <tr>
+            <th scope="col">Survey Name</th>
+            <th scope="col">Survey Description</th>
+            <th scope="col">Administer</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for survey in surveys %}
+                <tr>
+                    <td><b>{{survey.Survey.name}}</b></td>
+                    <td>{{survey.Survey.description}}</td>
+                    <td><a href="{{url_for('administer',id=survey.Survey.id)}}" class="btn btn-sm btn-success"> Proceed</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+
+        {% else %}
+        <h5> You have no surveys created as yet! </h5>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

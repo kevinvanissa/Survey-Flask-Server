@@ -1,0 +1,94 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+{% include 'flash.html' %}
+
+</script>
+<h3 align="center"> Users ({{users | length }}) </h3>
+<div class="row">
+    <div class="col-md-10 offset-md-2">
+    <br />
+<a href="" class="btn btn-sm btn-success" data-toggle="modal" data-target="#userModal"><i class="fas fa-plus"></i> Add User </a>
+<br />
+<br />
+        {% if users %}
+      <table class="table">
+        <thead class="table-secondary">
+            <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">User Role</th>
+            <th scope="col">Group</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>
+                         <a href="{{url_for('edituser', id=user.id)}}"> {{user.firstname}} {{user.lastname}} </a>
+                    </td>
+                    <td>{{user.email}}</td>
+                    <td>{{rolesDict[user.user_role]}}</td>
+                    <td>{{groupsDict[user.group_id]}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+
+        {% else %}
+        <h5> No users in the system! </h5>
+        {% endif %}
+
+    </div>
+</div>
+
+{% from "_formhelpers.html" import render_field %}
+
+<!-- Modal -->
+<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add User</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <form id="myForm "class="form" method="post" action="{{url_for('saveuser')}}" role="form">
+      <div class="modal-body">
+
+        <div class="well col-md-4">
+
+                            {{form.hidden_tag()}}
+        <dl>
+
+            {{render_field(form.firstname) }}
+            {{render_field(form.lastname) }}
+            {{render_field(form.email) }}
+            {{render_field(form.password) }}
+            {{render_field(form.confirm) }}
+            {{render_field(form.user_role) }}
+            {{render_field(form.group_id) }}
+            {{render_field(form.active_user) }}
+
+        </dl>
+        </div>
+                
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save User</button>
+      </div>
+
+        </form>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+{% endblock %}

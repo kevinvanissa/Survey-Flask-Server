@@ -1,0 +1,9 @@
+body {
+    /*background: url("/assets/images/background.png");*/
+    background: #fafafa;
+}
+
+a.mainlink:link {text-decoration:none; color:#B0B0B0;}    /* unvisited link */
+a.mainlink:visited { text-decoration:none; color:#B0B0B0;} /* visited link */
+a.mainlink:hover {text-decoration:none;color:#FFFFFF;}   /* mouse over link */
+a.mainlink:active {text-decoration:none; color:#B0B0B0;}  /* selected link */

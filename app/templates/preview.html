@@ -1,0 +1,126 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+{% include 'flash.html' %}
+
+
+<h3 align="center"> Preview Your Survey </h3>
+
+<a href="" class="btn btn-sm btn-success" data-toggle="modal" data-target="#qModal">Add Question to Survey </a>
+<div class="row">
+    <div class="col-md-10 offset-md-2">
+    <br />
+        {% if surveyq %}
+        <h5>{{survey.name}}</h5>
+
+
+        <br /><ol>
+            {% for question in surveyq %}
+            <li> <a href="" style="color:red;">[X]</a> {{question.Question.question_title}} </li><br />
+
+                {% if question.Question.question_type == 3  %}
+                      <input type ="radio" name="scale" id ="SA" value="20" disabled>
+                      <label for="SA">Strongly Agree</label><br>
+                      <input type ="radio" name="scale" id ="A" value="5" disabled>
+                      <label for="A">Agree</label><br>
+                      <input type ="radio" name="scale" id ="U" value="0" disabled>
+                      <label for="U">Unsure</label><br>
+                      <input type ="radio" name="scale" id ="D" value="-5" disabled>
+                      <label for="D">Disagree</label><br>
+                     <input type ="radio" name="scale" id ="SD" value="-20" disabled>
+                      <label for="SD">Strongly Disagree</label><br>
+
+                {% elif question.Question.question_type == 2 %}
+                      <input type ="radio" name="yn" id="Y" value="15" disabled>
+                      <label for="Y">YES</label><br>
+                      <input type ="radio" name="yn" id="U" value="0" disabled>
+                      <label for="U">Unsure</label><br>
+                      <input type ="radio" name="yn" id="N" value="-15" disabled>
+                      <label for="N">NO</label><br>
+
+                {% elif question.Question.question_type == 4 %}
+                      <input type ="radio" name="gender" id="M" value="M" disabled>
+                      <label for="M">MALE</label><br>
+                      <input type = "radio" name="gender" id="F" value="F" disabled>
+                      <label for="F">FEMALE</label><br>
+                
+                {% elif question.Question.question_type == 1 %}
+                     <input type ="radio" name="age" id="1" value="1" disabled>
+                      <label for="1">18 - 32</label><br>
+                      <input type = "radio" name="age" id="2" value="2" disabled>
+                      <label for="2">33 - 48</label><br>
+                      <input type = "radio" name="age" id="3" value="3" disabled>
+                      <label for="3">49 - 100</label><br>
+                  {% else %}
+                    <h5><i>unsure about this question type</i></h5>
+
+                {% endif %}
+
+            {% endfor %}
+             </ol>
+        {% else %}
+        <h5> You need to add questions to this survey </h5>
+        {% endif %}
+
+    </div>
+</div>
+
+
+
+{% from "_formhelpers.html" import render_field %}
+
+<!-- Modal -->
+<div class="modal fade" id="qModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Question to Survey</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <form class="form" method="post" action="{{url_for('addquestionstosurvey')}}" role="form">
+          <input type="hidden" name="sid" value="{{survey.id}}">
+      <div class="modal-body">
+
+        <div class="well col-md-12">
+            {% if nsurveyq %}
+        {% for q in nsurveyq %}            
+        <div class="alert alert-dark">
+               <input type="checkbox" id="ques{{q.id}}" name="surveyquestions" value="{{q.id}}">
+               <label for="ques{{q.id}}">{{q.question_title }} </label> 
+               <br />
+            {% for d in dimensions %}
+              {%if q.dimension == d.id %}
+                   <b>Dimension:</b>  <i>{{d.name}} </i> <br />
+              {% endif %}
+              {% endfor %}
+               <br />
+               <br />
+               </div>
+        {% endfor %}            
+            
+        {% else %}
+            <i> There are no additional questions in the system! </i>
+        {% endif %}
+        </div>
+                
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+      </div>
+
+        </form>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+{% endblock %}

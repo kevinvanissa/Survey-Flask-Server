@@ -1,0 +1,69 @@
+.point {
+  font-size: 15pt;
+}
+.hbreakfast{
+    color:blue;
+}
+
+.hlunch{
+    color:green;
+}
+
+.hdinner{
+    color:purple;
+}
+
+.hsnack{
+    color:red;
+}
+
+
+.bcolor{
+    border: 1px solid blue;
+    border-radius: 5px;
+}
+
+.lcolor{
+    border: 1px solid red;
+    border-radius: 5px;
+
+}
+
+.dcolor{
+    border: 1px solid green;
+    border-radius: 5px;
+
+}
+
+.mealsmallfont{
+    font-size: 9pt;
+}
+
+.foodheader{
+    font-size: 11pt;
+}
+
+.foodbody{
+    font-size: 9pt;
+}
+
+.foodmeasure{
+    font-size: 9pt;
+    font-weight:bold; 
+}
+
+.calorietitle{
+    font-size: 9pt;
+}
+
+.innerheader{
+    font-size: 12pt;
+}
+
+
+#clsDatePicker {
+    z-index: 100000;
+}
+
+
+ .ui-datepicker { width: 17em; padding: .2em .2em 0; z-index:9000; }
