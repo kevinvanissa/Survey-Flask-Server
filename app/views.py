@@ -484,6 +484,11 @@ def statistics(id):
 
     # calculation of final dimensions readiness values
     for k in finalDimensionsMaxDict:
+        #FIXME: THIS IS CRITICAL TO FIX. DIVIDE BY ZERO
+        #TODO: THIS IS CRITICAL TO FIX. DIVIDE BY ZERO
+        # below is a temporary fix
+        if sumDimensionsMaxDict[k] == 0:
+            continue
         finalDimensionsMaxDict[k] = int(round((sumDimensionsDict[k]/sumDimensionsMaxDict[k])*100,0))
     debug(finalDimensionsMaxDict)
 
@@ -837,9 +842,6 @@ def decodeAuthToken(token):
         return 'Signature expired. Login please'
     except jwt.InvalidTokenError:
         return 'Nice try, invalid token. Login please'
-
-
-
 
 @app.route('/authlogin', methods=['POST'])
 def loginAndGenerateToken():

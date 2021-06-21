@@ -11,7 +11,7 @@ CRSF_ENABLED = True
 
 # SQLALCHEMY_DATABASE_URI='sqlite:////home/kevin/Programming/xsertraining/xsert/xsert.db'
 # SQLALCHEMY_DATABASE_URI='mysql://root:@localhost/xsert?charset=utf8'
-SQLALCHEMY_DATABASE_URI='mysql://root:@localhost/cart?unix_socket=/opt/lampp/var/mysql/mysql.sock'
+SQLALCHEMY_DATABASE_URI='mysql+pymysql://cartUser:cartT00L@192.168.64.5:3306/cart'
 
 #MYSQL_DATABASE_USER = 'root'
 #MYSQL_DATABASE_PASSWORD = '1234'
