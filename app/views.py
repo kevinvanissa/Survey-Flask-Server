@@ -254,7 +254,8 @@ def addquestion():
         question_title = request.form['question_title']
         dimension = request.form['dimension']
         question_type = request.form['question_type']
-        question = Question(question_title=question_title, question_type=question_type, dimension=dimension,create_officer=g.user.id, updated=datetime.datetime.now())
+        question_option = request.form['question_option']
+        question = Question(question_title=question_title, question_type=question_type, dimension=dimension,question_option=question_option,create_officer=g.user.id, updated=datetime.datetime.now())
         
         db.session.add(question)
         db.session.commit()
@@ -267,7 +268,6 @@ def addquestion():
     return "<b> You shouldn't have reached here!'</b>"
 
    
-
 @app.route('/addquestionstosurvey', methods=['POST'])
 @login_required
 def addquestionstosurvey():
@@ -287,15 +287,10 @@ def addquestionstosurvey():
 
     return "<b> You shouldn't have reached here!'</b>"
 
-
-
-
-
 @app.route('/questions', methods=['GET', 'POST'])
 @login_required
 def questions():
     form = QuestionForm()
-
     if (g.user.user_role == ROLE_OFFICER) or (g.user.user_role == ROLE_ADMIN):
         questions = Question.query.filter_by(create_officer=g.user.id).all()
     else:
@@ -313,8 +308,10 @@ def editquestion(id):
             question_title = request.form['question_title']
             question_type = request.form['question_type']
             dimension = request.form['dimension']
+            question_option = request.form['question_option']
 
             question.question_title = question_title
+            question.question_option = question_option
             question.question_type = int(question_type)
             question.dimension = int(dimension)
             question.updated = datetime.datetime.now()
@@ -326,14 +323,11 @@ def editquestion(id):
         else:
             form.question_title.data = question.question_title
             form.question_type.data = str(question.question_type)
+            form.question_option.data = str(question.question_option)
             form.dimension.data = str(question.dimension)
     else:
         abort(404)
     return render_template('editquestion.html',question=question, id=id, form=form, title='Edit Question')
-
-
-
-
 
 
 @app.route('/preview/<id>', methods=['GET','POST'])
@@ -394,12 +388,7 @@ def savesurvey():
 
 
 
-
-
-
-
-
-@app.route('/statistics/<id>', methods=['GET'])
+@app.route('/statistics_old/<id>', methods=['GET'])
 @login_required
 def statistics(id):
     sSurvey = Survey.query.get_or_404(id)
@@ -823,7 +812,7 @@ def encodeAuthToken(email, groups=[]):
         admin = True if 'admin' in groups else False
 
         payload = {
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30),
+            # 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30),
             'email': email,
             'admin': admin
         }
@@ -913,9 +902,9 @@ def create_question(current_user):
 @token_required
 def rest_surveys(current_user):
 # def rest_surveys():
-    ruserid = 3
-    rgroupid = 1
-    role = 2
+    # ruserid = 3
+    # rgroupid = 1
+    # role = 2
     result = []
     dimension_dict = {}
     # surveys = db.session.query(Survey,Group).filter(Survey.group_id==Group.id,Survey.group_id==1).all()
@@ -933,6 +922,7 @@ def rest_surveys(current_user):
             temp["title"] = q.Question.question_title
             temp["dimension"] = dimension_dict[q.Question.dimension]
             temp["type"] = q.Question.question_type
+            temp["option"] = q.Question.question_option
             tempList.append(temp)
         sDict = {}
         sDict["id"] = s.Survey.id
@@ -954,19 +944,16 @@ def restsavesurvey(current_user):
     lon = round(float(req_json["lon"]), 6)
 
     sr = SurveyResponse(survey_id=int(sid),interviewer=int(uid),latitude=lat,longitude=lon, completed=datetime.datetime.now())
+    # for k,v in req_json.items():
+    #     print(k)
+    #     print(v)
     db.session.add(sr)
     db.session.flush()
     db.session.commit()
     for k,v in req_json.items():
         if k=="sid" or k=="lat" or k=="lon" or k=="uid":
             continue
-        r = Response(survey_response_id=sr.id,question=k,response=v)
+        r = Response(survey_response_id=sr.id,question=k,response=str(v))
         db.session.add(r)
         db.session.commit()
     return jsonify({"message":"Sucessfully saved survey responses"}) 
-
-
-
-
-
-

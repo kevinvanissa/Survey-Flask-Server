@@ -94,6 +94,7 @@ class Question(db.Model):
     question_title = db.Column(db.String(200), nullable=False)
     dimension = db.Column(db.Integer, db.ForeignKey('dimensions.id'))
     question_type = db.Column(db.Integer, db.ForeignKey('question_type.id'))
+    question_option = db.Column(db.String(1024))
     create_officer = db.Column(db.Integer, db.ForeignKey('user.id'))
     updated = db.Column(db.DateTime)
 

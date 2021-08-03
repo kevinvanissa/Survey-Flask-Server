@@ -42,6 +42,7 @@ class SurveyForm(FlaskForm):
 class QuestionForm(FlaskForm):
     question_title = TextAreaField('Question', [Required()])
     question_type = SelectField('Question Type', validators=[Required()])
+    question_option = TextAreaField('Question Option', [])
     dimension = SelectField('Dimensions', validators=[Required()])
 
     def __init__(self):
