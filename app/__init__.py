@@ -20,7 +20,7 @@ app.config.from_object('config')
 db = SQLAlchemy(app)
 
 # you can set key as config
-app.config['GOOGLEMAPS_KEY'] = "AIzaSyAqzuYOHxHAsgriFKzbe7oHX_h5i2l-Q9o"
+app.config['GOOGLEMAPS_KEY'] = "XXXX"
 # Initialize the extension
 GoogleMaps(app)
 
